@@ -11,28 +11,22 @@ output:
     df_print: default
 editor_options:
   chunk_output_type: console
-  markdown: 
-    wrap: 72
 ---
 
 # Student Details
 
-|                                              |                                              |
-|----------------------------------------------------------|-------------|
-| **Student ID Number**                        | 112827,132234,134265                         |
+|                                              |     |
+|----------------------------------------------|-----|
+| **Student ID Number**                        | 112827,132234,134265 |
 | **Student Name**                             | Kenneth Mungai,Kelly Noella, Emmanuel Kiptoo |
-| **BBIT 4.2 Group**                           | A,B                                          |
-| **BI Project Group Name/ID (if applicable)** | Lumin                                        |
+| **BBIT 4.2 Group**                           | A,B |
+| **BI Project Group Name/ID (if applicable)** | Lumin |
 
 # Setup Chunk
 
-**Note:** the following KnitR options have been set as the global
-defaults: <BR>
-`knitr::opts_chunk$set(echo = TRUE, warning = FALSE, eval = TRUE, collapse = FALSE, tidy = TRUE)`.
+**Note:** the following KnitR options have been set as the global defaults: <BR> `knitr::opts_chunk$set(echo = TRUE, warning = FALSE, eval = TRUE, collapse = FALSE, tidy = TRUE)`.
 
-More KnitR options are documented here
-<https://bookdown.org/yihui/rmarkdown-cookbook/chunk-options.html> and
-here <https://yihui.org/knitr/options/>.
+More KnitR options are documented here <https://bookdown.org/yihui/rmarkdown-cookbook/chunk-options.html> and here <https://yihui.org/knitr/options/>.
 
 ```{r setup, include=FALSE}
 library(formatR)
@@ -43,123 +37,195 @@ knitr::opts_chunk$set(
 ```
 
 # STEP 1. Install and Load the Required Packages
+```{r step-one-chunk}
+### caret ----
+if (require("caret")) {
+  require("caret")
+} else {
+  install.packages("caret", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-\`\`\`r {step-one chunck} if (require("languageserver")) {
-require("languageserver") } else { install.packages("languageserver",
-dependencies = TRUE, repos = "<https://cloud.r-project.org>") }
+### klaR ----
+if (require("klaR")) {
+  require("klaR")
+} else {
+  install.packages("klaR", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-### caret
+### e1071 ----
+if (require("e1071")) {
+  require("e1071")
+} else {
+  install.packages("e1071", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-if (require("caret")) { require("caret") } else {
-install.packages("caret", dependencies = TRUE, repos =
-"<https://cloud.r-project.org>") }
+### readr ----
+if (require("readr")) {
+  require("readr")
+} else {
+  install.packages("readr", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-### klaR 
+### LiblineaR ----
+if (require("LiblineaR")) {
+  require("LiblineaR")
+} else {
+  install.packages("LiblineaR", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-if (require("klaR")) { require("klaR") } else { install.packages("klaR",
-dependencies = TRUE, repos = "<https://cloud.r-project.org>") }
+### naivebayes ----
+if (require("naivebayes")) {
+  require("naivebayes")
+} else {
+  install.packages("naivebayes", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-### e1071
+### mlbench ----
+if (require("mlbench")) {
+  require("mlbench")
+} else {
+  install.packages("mlbench", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
-if (require("e1071")) { require("e1071") } else {
-install.packages("e1071", dependencies = TRUE, repos =
-"<https://cloud.r-project.org>") }
-
-### readr 
-
-if (require("readr")) { require("readr") } else {
-install.packages("readr", dependencies = TRUE, repos =
-"<https://cloud.r-project.org>") }
-
-### LiblineaR
-
-if (require("LiblineaR")) { require("LiblineaR") } else {
-install.packages("LiblineaR", dependencies = TRUE, repos =
-"<https://cloud.r-project.org>") }
-
-### naivebayes 
-
-if (require("naivebayes")) { require("naivebayes") } else {
-install.packages("naivebayes", dependencies = TRUE, repos =
-"<https://cloud.r-project.org>") }
-
-### mlbench
-
-if (require("mlbench")) { require("mlbench") } else {
-install.packages("mlbench", dependencies = TRUE, repos =
-"<https://cloud.r-project.org>") }
-
-```         
+library(readr)
+```
 
 # STEP 2. Load the dataset
-```r{step-two chunck}
+```{r step-two-chunk}
+## STEP 2. Load the dataset ----
 data(PimaIndiansDiabetes)
 summary(PimaIndiansDiabetes)
 
+# The str() function is used to compactly display the structure (variables
+# and data types) of the dataset
 str(PimaIndiansDiabetes)
+library(readr)
 ```
 
-#CASE 1: Splitting dataset into train and test sets \## STEP 1.
-Splitting dataset
-`r{case 1.1 chunck} train_index <- createDataPartition(PimaIndiansDiabetes$diabetes,                                    p = 0.75,                                    list = FALSE) pima_indians_diabetes_train <- PimaIndiansDiabetes[train_index, ] pima_indians_diabetes_test <- PimaIndiansDiabetes[-train_index, ]`
+## Splitting the dataset into train and test sets
+```{r step-three-chunk}
+### 1. Split the dataset ----
+# Define a 75:25 train:test data split of the dataset.
+# 75% to train and 25% to test the model
 
-## STEP 2. Training the model, Testing the model and Viewing the Results
-
-\`\`\`r{case 1.2} \# First Option: using e1071 package \## training
-PimaIndiansDiabetes_model_nb_e1071 \<- \# nolint
-e1071::naiveBayes(diabetes \~ pregnant + glucose + pressure + triceps +
-insulin + mass + pedigree + age, data = pima_indians_diabetes_train) \##
-testing predictions_nb_e1071 \<-
-predict(PimaIndiansDiabetes_model_nb_e1071, pima_indians_diabetes_test[,
-c("pregnant", "glucose", "pressure", "triceps", "insulin",
-"mass","pedigree", "age")]) \## results\
-print(predictions_nb_e1071) caret::confusionMatrix(predictions_nb_e1071,
-pima_indians_diabetes_test[, c("pregnant", "glucose", "pressure",
-"triceps", "insulin", "mass","pedigree", "age", "diabetes")]\$diabetes)
-
-plot(table(predictions_nb_e1071, pima_indians_diabetes_test[,
-c("pregnant", "glucose", "pressure", "triceps", "insulin",
-"mass","pedigree", "age", "diabetes")]\$diabetes))
-
-# Second Option: using caret package
-
-## training
-
-PimaIndiansDiabetes_model_nb_caret \<- \# nolint caret::train(diabetes
-\~ ., data = pima_indians_diabetes_train[, c("pregnant", "age",
-"glucose", "pressure", "triceps", "insulin", "mass", "pedigree",
-"diabetes" )], method = "naive_bayes") \## testing\
-predictions_nb_caret \<- predict(PimaIndiansDiabetes_model_nb_caret,
-pima_indians_diabetes_test[, c("pregnant", "glucose", "pressure",
-"triceps", "insulin", "mass","pedigree", "age")])
-
-## results
-
-print(PimaIndiansDiabetes_model_nb_caret)
-caret::confusionMatrix(predictions_nb_caret,
-pima_indians_diabetes_test[, c("pregnant", "glucose", "pressure",
-"triceps", "insulin", "mass","pedigree", "age", "diabetes")]\$diabetes)
-
-plot(table(predictions_nb_caret, pima_indians_diabetes_test[,
-c("pregnant", "glucose", "pressure", "triceps", "insulin",
-"mass","pedigree", "age", "diabetes")]\$diabetes))
-
-# Third Option: using klar package
-
-PimaIndiansDiabetes_model_nb_klaR \<- \# nolint
-klaR::NaiveBayes(`diabetes` \~ ., data = pima_indians_diabetes_train)
-
-```         
-# CASE 2. Bootstrapping
-```r{case-two chunck}
-#splitting
 train_index <- createDataPartition(PimaIndiansDiabetes$diabetes,
                                    p = 0.75,
                                    list = FALSE)
 pima_indians_diabetes_train <- PimaIndiansDiabetes[train_index, ]
 pima_indians_diabetes_test <- PimaIndiansDiabetes[-train_index, ]
 
-#training
+library(readr)
+```
+
+# Train the model
+```{r step-four-chunk}
+#### 2.a OPTION 1: naiveBayes() function in the e1071 package ----
+
+PimaIndiansDiabetes_model_nb_e1071 <- # nolint
+  e1071::naiveBayes(diabetes ~ pregnant + glucose + 
+                      pressure + triceps +
+                      insulin +
+                      mass + pedigree +
+                      age,
+                    data = pima_indians_diabetes_train)
+ 
+#### 2.b. OPTION 2: naiveBayes() function in the caret package ----
+PimaIndiansDiabetes_model_nb_caret <- # nolint
+  caret::train(diabetes ~ ., data =
+                 pima_indians_diabetes_train[, c("pregnant", "age", "glucose",
+                                             "pressure", "triceps", "insulin",
+                                             "mass",
+                                             "pedigree",
+                                             "diabetes"
+                                             )],
+               method = "naive_bayes")
+
+#### 2.c OPTION 3: "NaiveBayes()" function in the "klaR" package ----
+PimaIndiansDiabetes_model_nb_klaR <- # nolint
+  klaR::NaiveBayes(`diabetes` ~ .,
+                   data = pima_indians_diabetes_train)
+
+library(readr)
+```
+
+# STEP3. Test the model using the testing dataset
+```{r step-five-chunk}
+#### 3.a Test the e1071 Naive Bayes model ----
+
+predictions_nb_e1071 <-
+  predict(PimaIndiansDiabetes_model_nb_e1071,
+          pima_indians_diabetes_test[, c("pregnant", "glucose",
+                                     "pressure", "triceps", "insulin",
+                                     "mass","pedigree", "age")])
+
+#### 3.b Test the caret Naive Bayes model ----
+
+predictions_nb_caret <-
+  predict(PimaIndiansDiabetes_model_nb_caret,
+          pima_indians_diabetes_test[, c("pregnant", "glucose",
+                                         "pressure", "triceps", "insulin",
+                                         "mass","pedigree", "age")])
+
+### 4. Results ----
+#### 4.a e1071 Naive Bayes model ----
+print(predictions_nb_e1071)
+caret::confusionMatrix(predictions_nb_e1071,
+                       pima_indians_diabetes_test[, c("pregnant", "glucose",
+                                                      "pressure", "triceps",
+                                                      "insulin",
+                                                      "mass","pedigree", 
+                                                      "age",
+                                                      "diabetes")]$diabetes)
+
+plot(table(predictions_nb_e1071,
+           pima_indians_diabetes_test[, c("pregnant", "glucose",
+                                          "pressure", "triceps",
+                                          "insulin",
+                                          "mass","pedigree", 
+                                          "age",
+                                          "diabetes")]$diabetes))
+
+#### 4. b caret Naive Bayes model ----
+print(PimaIndiansDiabetes_model_nb_caret)
+caret::confusionMatrix(predictions_nb_caret,
+                       pima_indians_diabetes_test[, c("pregnant", "glucose",
+                                                      "pressure", "triceps",
+                                                      "insulin",
+                                                      "mass","pedigree", 
+                                                      "age",
+                                                      "diabetes")]$diabetes)
+
+plot(table(predictions_nb_caret,
+           pima_indians_diabetes_test[, c("pregnant", "glucose",
+                                          "pressure", "triceps",
+                                          "insulin",
+                                          "mass","pedigree", 
+                                          "age",
+                                          "diabetes")]$diabetes))
+library(readr)
+```
+
+# STEP4:Bootstrapping
+```{r step-six-chunk}
+### 1. Split the dataset ----
+# Define a 75:25 train:test data split of the dataset.
+# 75% to train and 25% to test the model
+
+train_index <- createDataPartition(PimaIndiansDiabetes$diabetes,
+                                   p = 0.75,
+                                   list = FALSE)
+pima_indians_diabetes_train <- PimaIndiansDiabetes[train_index, ]
+pima_indians_diabetes_test <- PimaIndiansDiabetes[-train_index, ]
+
+### 2. Train a  classification model ----
+#### 2.a Train control  ----
 train_control <- trainControl(method = "cv", number = 10)
 
 PimaIndiansDiabetes_model_logit <- # nolint
@@ -173,8 +239,8 @@ PimaIndiansDiabetes_model_logit <- # nolint
                trControl = train_control,
                na.action = na.omit, method = "glm", family ="binomial", 
         metric = "Accuracy")
-        
-#testing
+
+### 3. Test the trained linear regression model   ----
 predictions_logit <- predict(PimaIndiansDiabetes_model_logit,
                           pima_indians_diabetes_test[, c("pregnant", "glucose",
                                                          "pressure", "triceps",
@@ -183,42 +249,64 @@ predictions_logit <- predict(PimaIndiansDiabetes_model_logit,
                                                          "age",
                                                          "diabetes")])
 
-#results   ----
+### 4. Results   ----
 print(PimaIndiansDiabetes_model_logit)
 print(predictions_logit)
+library(readr)
 ```
 
-# CASE 3. CV, Repeated CV, and LOOCV
+# STEP5:CV, Repeated CV, and LOOCV
+```{r step-seven-chunk}
+### 1. Split the dataset ----
+# Define a 75:25 train:test data split of the dataset.
+# 75% to train and 25% to test the model
 
-## Option 1. Regression: Linear Model (10-fold Cross Validation)
+train_index <- createDataPartition(PimaIndiansDiabetes$diabetes,
+                                   p = 0.75,
+                                   list = FALSE)
+pima_indians_diabetes_train <- PimaIndiansDiabetes[train_index, ]
+pima_indians_diabetes_test <- PimaIndiansDiabetes[-train_index, ]
 
-\`\`\`r{case 3.1 chunck} #training train_control \<- trainControl(method
-= "cv", number = 10)
+### 2. Regression: Linear model      ----
+#### 2.a  10-fold cross validation  ----
+train_control <- trainControl(method = "cv", number = 10)
 
-PimaIndiansDiabetes_model_lm \<- \# nolint train(`diabetes` \~
-`pregnant` + `glucose` + `pressure` + `triceps` + `insulin` + `mass` +
-`pedigree` + `age`, data = pima_indians_diabetes_train, trControl =
-train_control, na.action = na.omit, method = "glm", metric = "Accuracy")
+PimaIndiansDiabetes_model_lm <- # nolint
+  train(`diabetes` ~
+          `pregnant` + `glucose` +
+          `pressure` + `triceps` +
+          `insulin` + `mass` +
+          `pedigree` +
+          `age`,
+        data = pima_indians_diabetes_train,
+        trControl = train_control,
+        na.action = na.omit, method = "glm", 
+        metric = "Accuracy")
 
-#testing predictions_lm \<- predict(PimaIndiansDiabetes_model_lm,
-pima_indians_diabetes_test[,c("pregnant", "glucose", "pressure",
-"triceps", "insulin", "mass","pedigree", "age", "diabetes")])
+#### 2.b Test the trained model   ----
+predictions_lm <- predict(PimaIndiansDiabetes_model_lm, pima_indians_diabetes_test[,c("pregnant", "glucose",
+                                                                                      "pressure", "triceps",
+                                                                                      "insulin",
+                                                                                      "mass","pedigree", 
+                                                                                      "age",
+                                                                                      "diabetes")])
 
-#viewing results (RMSE) ---- print(PimaIndiansDiabetes_model_lm)
+### 2.c. View the RMSE and the predicted values ====
+print(PimaIndiansDiabetes_model_lm)
 print(predictions_lm)
 
-```         
+library(readr)
+```
 
-## Option 2. Classification: LDA with k-fold Cross Validation (LDA classifier based on a 5-fold CV)  
-
-```r{case 3.2 chucnk}
-#training  ----
+# STEP6: Classification: LDA with k-fold Cross Validation
+```{r step-eight-chunk}
+#### 3.a LDA classifier based on a 5-fold CV    ----
 PimaIndiansDiabetes_model_lda <-
   caret::train(`diabetes` ~ ., data = pima_indians_diabetes_train,
                trControl = train_control, na.action = na.omit, method = "lda2",
                metric = "Accuracy")
 
-# test the trained LDA model   ----
+#### 3.b Test the trained LDA model   ----
 predictions_lda <- predict(PimaIndiansDiabetes_model_lda,
                            pima_indians_diabetes_test[, c("pregnant", "glucose",
                                                           "pressure", "triceps",
@@ -227,34 +315,31 @@ predictions_lda <- predict(PimaIndiansDiabetes_model_lda,
                                                           "age",
                                                           "diabetes")])
 
-# view the summary of the model and view the confusion matrix ----
+#### 3.c. View the summary of the model and view the confusion matrix ----
 print(PimaIndiansDiabetes_model_lda)
 caret::confusionMatrix(predictions_lda, pima_indians_diabetes_test$diabetes)
+
+
+library(readr)
 ```
 
-## Option 3. Classification: Naive Bayes with Repeated k-fold Cross Validation ----
+# STEP7: Classification: Naive Bayes with Repeated k-fold Cross Validation
+```{step-nine-chunk}
+#### 4.a. Train an e1071::naive Bayes classifier based on the diabetes variable ----
+PimaIndiansDiabetes_model_nb <-
+  e1071::naiveBayes(`diabetes` ~ ., data = pima_indians_diabetes_train)
 
-\`\``r{case 3.3 chunck} # train an e1071::naive Bayes classifier based on the diabetes variable ---- PimaIndiansDiabetes_model_nb <-   e1071::naiveBayes(`diabetes\`
-\~ ., data = pima_indians_diabetes_train)
+#### 4.b. Test the trained naive Bayes classifier   ----
+predictions_nb_e1071 <-
+  predict(PimaIndiansDiabetes_model_nb, pima_indians_diabetes_test[, 1:9])
 
-# test the trained naive Bayes classifier ----
-
-predictions_nb_e1071 \<- predict(PimaIndiansDiabetes_model_nb,
-pima_indians_diabetes_test[, 1:9])
-
-# View a summary of the naive Bayes model and the confusion matrix ----
-
+#### 4.c. View a summary of the naive Bayes model and the confusion matrix ----
 print(PimaIndiansDiabetes_model_nb)
-caret::confusionMatrix(predictions_nb_e1071,
-pima_indians_diabetes_test\$diabetes)
+caret::confusionMatrix(predictions_nb_e1071, pima_indians_diabetes_test$diabetes)
 
-```         
+### 5. Classification: SVM with Repeated k-fold Cross Validation ----
+#### 5.a. SVM Classifier using 5-fold cross validation with 3 reps ----
 
-## Option 4. Classification: SVM with Repeated k-fold Cross Validation ----
-
-```r{case 3.4 chunck}
-# SVM Classifier using 5-fold cross validation with 3 reps ----
-# training
 
 train_control <- trainControl(method = "repeatedcv", number = 5, repeats = 3)
 
@@ -263,32 +348,32 @@ PimaIndiansDiabetes_model_svm <-
                trControl = train_control, na.action = na.omit,
                method = "svmLinearWeights2", metric = "Accuracy")
 
-# test the trained SVM model ----
+#### 5.b. Test the trained SVM model ----
 predictions_svm <- predict(PimaIndiansDiabetes_model_svm, pima_indians_diabetes_test[, 1:9])
 
-# View a summary of the model and view the confusion matrix ----
+#### 5.c. View a summary of the model and view the confusion matrix ----
 print(PimaIndiansDiabetes_model_svm)
 caret::confusionMatrix(predictions_svm, pima_indians_diabetes_test$diabetes)
-```
 
-## Option 5. Classification: Naive Bayes with Leave One Out Cross Validation ----
 
-\`\`\`r{case 3.5 chunck} \# Train a Naive Bayes classifier based on an
-LOOCV ---- train_control \<- trainControl(method = "LOOCV")
+### 6. Classification: Naive Bayes with Leave One Out Cross Validation ----
 
-PimaIndiansDiabetes_nb_loocv \<- caret::train(`diabetes` \~ ., data =
-pima_indians_diabetes_train, trControl = train_control, na.action =
-na.omit, method = "naive_bayes", metric = "Accuracy")
 
-# Test the trained model using the testing dataset ----
+#### 6.a. Train a Naive Bayes classifier based on an LOOCV ----
+train_control <- trainControl(method = "LOOCV")
 
-predictions_nb_loocv \<- predict(PimaIndiansDiabetes_nb_loocv,
-pima_indians_diabetes_test[, 1:9])
+PimaIndiansDiabetes_nb_loocv <-
+  caret::train(`diabetes` ~ ., data = pima_indians_diabetes_train,
+               trControl = train_control, na.action = na.omit,
+               method = "naive_bayes", metric = "Accuracy")
 
-# View the confusion matrix ----
+#### 6.b. Test the trained model using the testing dataset ----
+predictions_nb_loocv <-
+  predict(PimaIndiansDiabetes_nb_loocv, pima_indians_diabetes_test[, 1:9])
 
+#### 6.c. View the confusion matrix ----
 print(PimaIndiansDiabetes_nb_loocv)
-caret::confusionMatrix(predictions_nb_loocv,
-pima_indians_diabetes_test\$diabetes)
+caret::confusionMatrix(predictions_nb_loocv, pima_indians_diabetes_test$diabetes)
 
-\`\`\`
+library(readr)
+```

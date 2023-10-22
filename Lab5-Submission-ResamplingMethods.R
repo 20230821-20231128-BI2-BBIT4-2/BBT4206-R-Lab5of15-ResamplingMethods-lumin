@@ -303,7 +303,6 @@ caret::confusionMatrix(predictions_nb_e1071, pima_indians_diabetes_test$diabetes
 ### 5. Classification: SVM with Repeated k-fold Cross Validation ----
 #### 5.a. SVM Classifier using 5-fold cross validation with 3 reps ----
 
-
 train_control <- trainControl(method = "repeatedcv", number = 5, repeats = 3)
 
 PimaIndiansDiabetes_model_svm <-
@@ -320,7 +319,6 @@ caret::confusionMatrix(predictions_svm, pima_indians_diabetes_test$diabetes)
 
 
 ### 6. Classification: Naive Bayes with Leave One Out Cross Validation ----
-
 
 #### 6.a. Train a Naive Bayes classifier based on an LOOCV ----
 train_control <- trainControl(method = "LOOCV")
