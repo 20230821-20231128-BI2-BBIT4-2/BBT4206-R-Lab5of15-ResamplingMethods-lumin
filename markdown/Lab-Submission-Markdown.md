@@ -7,36 +7,28 @@ Business Intelligence Project
 - [Setup Chunk](#setup-chunk)
 - [STEP 1. Install and Load the Required
   Packages](#step-1-install-and-load-the-required-packages)
-  - [caret —-](#caret--)
-  - [klaR —-](#klar--)
-  - [e1071 —-](#e1071--)
-  - [readr —-](#readr--)
-  - [LiblineaR —-](#liblinear--)
-  - [naivebayes —-](#naivebayes--)
-  - [mlbench —-](#mlbench--)
-  - [STEP 2. Training the model, Testing the model and Viewing the
-    Results](#step-2-training-the-model-testing-the-model-and-viewing-the-results)
-- [Second Option: using caret
-  package](#second-option-using-caret-package)
-  - [training](#training)
-  - [results](#results)
-- [Third Option: using klar package](#third-option-using-klar-package)
+  - [caret](#caret)
+  - [klaR](#klar)
+  - [e1071](#e1071)
+  - [readr](#readr)
+  - [LiblineaR](#liblinear--)
+  - [naivebayes](#naivebayes--)
+  - [mlbench](#mlbench--)
+- [CASE 1: Splitting dataset into train and test sets](#case-1-splitting-dataset-into-train-and-test-sets)    
+  - [STEP 2. Training the model, Testing the model and Viewing the Results](#step-2-training-the-model-testing-the-model-and viewing-the-results)
+     -[First Option: using e1071 package](#first-option-using-e1071-package)
+     - [Second Option: using caret package](#second-option-using-caret-package)
+     - [Third Option: using klar package](#third-option-using-klar-package)
+- [CASE 2: Bootstrapping](#bootstrapping)
 - [CASE 3. CV, Repeated CV, and LOOCV](#case-3-cv-repeated-cv-and-loocv)
   - [Option 1. Regression: Linear Model (10-fold Cross
     Validation)](#option-1-regression-linear-model-10-fold-cross-validation)
+  - [Option 2. Classification: LDA with k-fold Cross Validation](#option-2-classification-lda-with-k-fold-cross-validation)
   - [Option 3. Classification: Naive Bayes with Repeated k-fold Cross
-    Validation
-    —-](#option-3-classification-naive-bayes-with-repeated-k-fold-cross-validation--)
-- [test the trained naive Bayes classifier
-  —-](#test-the-trained-naive-bayes-classifier--)
-- [View a summary of the naive Bayes model and the confusion matrix
-  —-](#view-a-summary-of-the-naive-bayes-model-and-the-confusion-matrix--)
+    Validation](#option-3-classification-naive-bayes-with-repeated-k-fold-cross-validation)
+  - [Option 4. Classification: SVM with Repeated k-fold Cross Validation](#classification-svm-with-repeated-k-fold-cross-validation)
   - [Option 5. Classification: Naive Bayes with Leave One Out Cross
-    Validation
-    —-](#option-5-classification-naive-bayes-with-leave-one-out-cross-validation--)
-- [Test the trained model using the testing dataset
-  —-](#test-the-trained-model-using-the-testing-dataset--)
-- [View the confusion matrix —-](#view-the-confusion-matrix--)
+    Validation](#option-5-classification-naive-bayes-with-leave-one-out-cross-validation)
 
 # Student Details
 
