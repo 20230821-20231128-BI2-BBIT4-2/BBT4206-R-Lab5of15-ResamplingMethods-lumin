@@ -450,7 +450,7 @@ demand_forecasting_dataset_model_lm <- # nolint
                data = demand_forecasting_dataset_train,
                trControl = train_control,
                na.action = na.omit, method = "lm", metric = "RMSE")
-
+      
 ## 3. Test the trained linear regression model using the testing dataset ----
 predictions_lm <- predict(demand_forecasting_dataset_model_lm,
                           demand_forecasting_dataset_test[, 1:13])
