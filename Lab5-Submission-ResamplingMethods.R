@@ -77,8 +77,12 @@ if (require("naivebayes")) {
 }
 
 ### mlbench ----
-install.packages("mlbench")
-library(mlbench)
+if (require("mlbench")) {
+  require("mlbench")
+} else {
+  install.packages("mlbench", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
 
 
 ## STEP 2. Load the dataset ----
@@ -326,10 +330,10 @@ PimaIndiansDiabetes_nb_loocv <-
                trControl = train_control, na.action = na.omit,
                method = "naive_bayes", metric = "Accuracy")
 
-#### 6.b. Test the trained model using the testing dataset ====
+#### 6.b. Test the trained model using the testing dataset ----
 predictions_nb_loocv <-
   predict(PimaIndiansDiabetes_nb_loocv, pima_indians_diabetes_test[, 1:9])
 
-#### 6.c. View the confusion matrix ====
+#### 6.c. View the confusion matrix ----
 print(PimaIndiansDiabetes_nb_loocv)
 caret::confusionMatrix(predictions_nb_loocv, pima_indians_diabetes_test$diabetes)
